@@ -1,0 +1,356 @@
+package ScoreStatistics.dao;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import ScoreStatistics.vo.CourseResult;
+import ScoreStatistics.vo.CourseTotal;
+import ScoreStatistics.vo.ScoreInfomation;
+import ScoreStatistics.vo.StudentInfomation;
+import ScoreStatistics.vo.StudentResult;
+
+
+public class Statistics_dao {
+	//输入
+	public static ArrayList<StudentInfomation> inputStuInfo() {
+		ArrayList<StudentInfomation> stuInfo = new ArrayList<StudentInfomation>();
+		Scanner scan = new Scanner(System.in);
+		String data = scan.nextLine();
+		while (!data.equals("end")) 
+		{
+			String array[] = data.split(",|，");
+			StudentInfomation stu = new StudentInfomation(array[0], array[1], array[2]);
+			stuInfo.add(stu);
+			data = scan.nextLine();
+		}
+		return stuInfo;
+	}
+
+	public static ArrayList<ScoreInfomation> inputScore() {
+		ArrayList<ScoreInfomation> scoreInfo = new ArrayList<ScoreInfomation>();
+		Scanner scan = new Scanner(System.in);
+		String data = scan.nextLine();
+		while (!data.equals("end")) 
+		{
+			String array[] = data.split(",|，");
+			ScoreInfomation score = new ScoreInfomation(array[0], array[1], Integer.parseInt(array[2]));// 将string换成int
+
+			scoreInfo.add(score);
+			data = scan.nextLine();
+		}
+		return scoreInfo;
+	}
+
+	//处理
+	public static ArrayList<StudentResult> getStuResult(ArrayList<StudentInfomation> stuInfo,ArrayList<ScoreInfomation> scoreInfo) {
+		ArrayList<StudentResult> stuResult = new ArrayList<StudentResult>();
+		for (int i = 0; i < stuInfo.size(); i++) {
+			StudentInfomation stuInfo_X = stuInfo.get(i);
+			
+			double avg = 0, sum = 0, count = 0;
+			for (i = 0; i < scoreInfo.size(); i++) {
+				if (scoreInfo.get(i).getId().equals(stuInfo_X.getId())) {
+					sum += scoreInfo.get(i).getGrade();
+					count++;
+				}
+			}
+			avg = sum/count;
+			
+			StudentResult result = new StudentResult(stuInfo_X.getId(), stuInfo_X.getName(), stuInfo_X.getGender(), avg);
+			stuResult.add(result);
+		}
+		return stuResult;
+	}
+	
+	public static int isExist(String s, ArrayList<CourseTotal> courseTot) {
+		int index = -1;
+		for (int i = 0; i < courseTot.size(); i++) {
+			if (courseTot.get(i).getCourse().equals(s)) {
+				return i;
+			}
+		}
+		return index;
+	}
+	
+	public static ArrayList<CourseResult> disposeCla(ArrayList<ScoreInfomation> scoreInfo) {
+		ArrayList<CourseResult> courseResult = new ArrayList<CourseResult>();
+		ArrayList<CourseTotal> courseTotal = new ArrayList<CourseTotal>();
+
+		for (int i = 0; i < scoreInfo.size(); i++) {
+			int index = isExist(scoreInfo.get(i).getCourse(), courseTotal);
+			if (index != -1) {
+				CourseTotal cours_to = courseTotal.get(index);
+				cours_to.setTotal(cours_to.getTotal() + scoreInfo.get(i).getGrade());
+				cours_to.setNum(cours_to.getNum()+1);
+				courseTotal.set(index,cours_to);
+			} 
+			else {
+				CourseTotal cours_to = new CourseTotal(scoreInfo.get(i).getCourse(), scoreInfo.get(i).getGrade(), 1);
+				courseTotal.add(cours_to);
+			}
+
+		}
+
+		for (int i = 0; i < courseTotal.size(); i++) {
+			CourseTotal coutot = courseTotal.get(i);
+			CourseResult coures = new CourseResult(coutot.getCourse(), coutot.getTotal() / coutot.getNum());
+			courseResult.add(coures);
+		}
+
+		return courseResult;
+	}
+
+
+	//输出
+	public static StringBuffer output(ArrayList<StudentResult> stuResult, ArrayList<CourseResult> coursrResult) {
+		StringBuffer display = new StringBuffer();
+		display.append("按学生统计：\n");
+		display.append("学号\t姓名\t性别\t平均分\n");
+		for (int i = 0; i < stuResult.size(); i++) {
+			display.append(stuResult.get(i).toString());
+			display.append("\n");
+		}
+		display.append("\n按课程统计：");
+		display.append("\n课程\t平均分\n");
+		for (int i = 0; i < coursrResult.size(); i++) {
+			display.append(coursrResult.get(i).toString());
+			display.append("\n");
+		}
+		return display;
+	}
+}
+package ScoreStatistics.vo;
+
+public class CourseResult {
+	private String Course;
+	private double Avg;
+
+	public CourseResult() {
+		super();
+	}
+
+	public CourseResult(String course, double avg) {
+		super();
+		Course = course;
+		Avg = avg;
+	}
+
+	public String getCourse() {
+		return Course;
+	}
+
+	public void setCourse(String course) {
+		Course = course;
+	}
+
+	public double getAvg() {
+		return Avg;
+	}
+
+	public void setAvg(double avg) {
+		Avg = avg;
+	}
+
+	@Override
+	public String toString() {
+		String msg = null;
+		msg += this.Course + "\t" + this.Avg;
+		return msg;
+	}
+}
+package ScoreStatistics.vo;
+
+public class CourseTotal {
+	private String course;
+	private double total;
+	private int num;
+
+	public CourseTotal() {
+		super();
+	}
+
+	public CourseTotal(String cou, double tot, int n) {
+		super();
+		course = cou;
+		total = tot;
+		num = n;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String cou) {
+		course = cou;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double tot) {
+		total = tot;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int n) {
+		num = n;
+	}
+
+}
+package ScoreStatistics.vo;
+
+public class ScoreInfomation {
+	private String id;
+	private String course;
+	private double grade;
+
+	public ScoreInfomation() {
+		super();
+	}
+
+	public ScoreInfomation(String i, String cou, double gra) {
+		super();
+		id = i;
+		course = cou;
+		grade = gra;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
+	}
+
+	public double getGrade() {
+		return grade;
+	}
+
+	public void setGrade(double grade) {
+		this.grade = grade;
+	}
+
+	@Override
+	public String toString() {
+		return "ScoreInfomation [ID=" + id + ", Course=" + course + ", Grade=" + grade + "]";
+	}
+}
+package ScoreStatistics.vo;
+
+public class StudentInfomation {
+	private String id;
+	private String name;
+	private String gender;
+
+	public StudentInfomation() {
+		super();
+	}
+
+	public StudentInfomation(String i, String na, String gen) {
+		super();
+		id = i;
+		name = na;
+		gender = gen;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String i) {
+		id = i;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String na) {
+		name = na;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gen) {
+		gender = gen;
+	}
+
+	@Override
+	public String toString() {
+		return "StudentInfomation [Id=" + id + ", Name=" + name + ", Gender=" + gender + "]";
+	}
+}
+package ScoreStatistics.vo;
+
+public class StudentResult {
+	private String id;
+	private String name;
+	private String gender;
+	private double avg;
+
+	public StudentResult() {
+		super();
+	}
+
+	public StudentResult(String id, String name, String gender, double avg) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.gender = gender;
+		this.avg = avg;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public double getAvg() {
+		return avg;
+	}
+
+	public void setAvg(double avg) {
+		this.avg = avg;
+	}
+
+	@Override
+	public String toString() {
+		String msg = null;
+		msg += this.id + "\t" + this.name + "\t" + this.gender + "\t" + this.avg;
+		return msg;
+	}
+}
