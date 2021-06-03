@@ -1,0 +1,258 @@
+package week13;
+
+public class validdata {
+
+	// static 方法在调用时无需通过对象实例化进行调用 直接用类名
+
+	// 匹配座机号
+	public static boolean isMobile(String mobile) {
+
+		String regex = "(0\\d{2,3}-?)[1-9]\\d{7}";
+		if (mobile.matches(regex)) {
+			System.out.println("座机号合法！");
+			return true;
+		} else {
+			System.out.println("座机号不合法");
+			return false;
+		}
+	}
+
+	// 匹配邮箱
+	public static boolean isEmil(String emil) {
+
+		String regex = "\\w{1,}@(\\w{1,}.){1,}\\w{1,}";
+		if (emil.matches(regex)) {
+			System.out.println("邮箱合法！");
+			return true;
+		} else {
+			System.out.println("邮箱合法");
+			return false;
+		}
+	}
+
+	// 匹配手机号
+	public static boolean isPhone(String phone) {
+
+		String regex = "1[358][0-9]{9}";
+		if (phone.matches(regex)) {
+			System.out.println("手机号合法！");
+			return true;
+		} else {
+			System.out.println("手机号不合法");
+			return false;
+		}
+	}
+
+	// 匹配用户名
+	public static boolean ishost(String user) {
+		String regex = "[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+";  // \\u表示后面跟的是16进制的数
+		if (user.matches(regex)) {
+			System.out.println("用户名合法！");
+			return true;
+		} else {
+			System.out.println("用户名不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配密码
+	public static boolean ispassword(String password) {
+		String regex = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";  
+		if (password.matches(regex)) {
+			System.out.println("密码合法！");
+			return true;
+		} else {
+			System.out.println("密码不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配QQ
+	public static boolean isQQ(String QQ) {
+		String regex = "1[0-9]{4,9}";  
+		if (QQ.matches(regex)) {
+			System.out.println("QQ号合法！");
+			return true;
+		} else {
+			System.out.println("QQ号不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配身份证号
+	public static boolean isID(String ID) {
+		String regex = "\\d{17}[\\d|x]|\\d{15}";
+		if (ID.matches(regex)) {
+			System.out.println("身份证号合法！");
+			return true;
+		} else {
+			System.out.println("身份证号不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配邮政编码
+	public static boolean ispostcode(String postcode) {
+		String regex = "\\d{6}";  
+		if (postcode.matches(regex)) {
+			System.out.println("邮政编码合法！");
+			return true;
+		} else {
+			System.out.println("邮政编码不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配website
+	public static boolean iswebsite(String website) {
+		String regex = "^((https|http|ftp|rtsp|mms)?:\\/\\/)[^\\s]+";
+		if (website.matches(regex)) {
+			System.out.println("website合法！");
+			return true;
+		} else {
+			System.out.println("website不合法,请重新输入！");
+			return false;
+		}
+	}
+
+	// 匹配出生日期
+	public static boolean isbirthday(String birthday) {
+		String regex = "\\d{4}(\\-|\\/|.)\\d{1,2}\\1\\d{1,2}";  
+		if (birthday.matches(regex)) {
+			System.out.println("出生日期合法！");
+			return true;
+		} else {
+			System.out.println("出生日期不合法,请重新输入！");
+			return false;
+		}
+	}
+	// 匹配中文名
+	public static boolean ischinesename(String name) {
+		String regex = "[\\u4e00-\\u9fa5]+";  
+		if (name.matches(regex)) {
+			System.out.println("中文名合法！");
+			return true;
+		} else {
+			System.out.println("中文名不合法,请重新输入！");
+			return false;
+		}
+	}
+
+}
+
+driver.java:
+package week13;
+
+import java.util.Scanner;
+
+public class driver {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner cin=new Scanner(System.in);
+		System.out.println("请输入座机号");
+		String mobile="";
+		while(true)
+		{
+			mobile=cin.nextLine();
+			if(validdata.isMobile(mobile))
+				break;
+			
+		}
+		String emil="";
+		System.out.println("请输入邮箱地址");
+		while(true)
+		{
+			emil=cin.nextLine();
+			if(validdata.isEmil(emil))
+				break;
+			
+		}
+
+		String phone="";
+		System.out.println("请输入手机号");
+		while(true)
+		{
+			phone=cin.nextLine();
+			if(validdata.isPhone(phone))
+				break;
+			
+		}
+		String host="";
+		System.out.println("请输入用户名");
+		while(true)
+		{
+			host=cin.nextLine();
+			if(validdata.ishost(host))
+				break;
+			
+		}
+		String password="";
+		System.out.println("请输入密码号(包含大小字母和数字和特殊字符，至少八位");
+		while(true)
+		{
+			password=cin.nextLine();
+			if(validdata.ispassword(password))
+				break;
+			
+		}
+		String QQ="";
+		System.out.println("请输入QQ号");
+		while(true)
+		{
+			QQ=cin.nextLine();
+			if(validdata.isQQ(QQ))
+				break;
+			
+		}
+		String idcard="";
+		System.out.println("请输入身份证号");
+		while(true)
+		{
+			idcard=cin.nextLine();
+			if(validdata.isID(idcard))
+				break;
+			
+		}
+		String youbian="";
+		System.out.println("请输入邮政编码号");
+		while(true)
+		{
+			youbian=cin.nextLine();
+			if(validdata.ispostcode(youbian))
+				break;
+			
+		}
+		String web="";
+		System.out.println("请输入Website");
+		while(true)
+		{
+			web=cin.nextLine();
+			if(validdata.iswebsite(web))
+				break;
+			
+		}
+		String birthday="";
+		System.out.println("请输入出生日期");
+		while(true)
+		{
+			birthday=cin.nextLine();
+			if(validdata.isbirthday(birthday))
+				break;
+			
+		}
+		String chinesename="";
+		System.out.println("请输入中文名");
+		while(true)
+		{
+			 chinesename=cin.nextLine();
+			if(validdata.ischinesename(chinesename))
+				break;
+			
+		}
+		System.out.println("输入完毕！");
+
+	}
+
+}
+
